@@ -1,0 +1,59 @@
+import time
+import winsound
+
+def swap_sound_effect():
+    winsound.MessageBeep(winsound.MB_OK)
+    
+def merge(product_id, left_sub, middle, right_sub):
+    left_side = product_id[left_sub:middle+1]
+    right_side = product_id[middle+1:right_sub+1]
+    left_index, right_index = 0,0
+    main_index = left_sub
+    print("Merge called with {} and {}".format(left_side, right_side))
+
+
+    while left_index < len(left_side) and right_index < len(right_side):
+        if left_side[left_index] < right_side[right_index]:
+            product_id[main_index] = left_side[left_index]
+            left_index += 1
+        else:
+            product_id[main_index] = right_side[right_index]
+            time.sleep(2)
+            print("Swapping [{}] position infront of [{}]".format(right_side[right_index],left_side[left_index]))
+            swap_sound_effect()  
+            time.sleep(1)
+            right_index += 1
+        main_index += 1
+
+    while left_index < len(left_side):
+        product_id[main_index] = left_side[left_index]
+        left_index += 1
+        main_index +=1
+
+    while right_index < len(right_side):
+        product_id[main_index] = right_side[right_index]
+        right_index += 1
+        main_index +=1
+
+    print("After merge: {}".format(product_id[left_sub:right_sub+1]))
+    time.sleep(3)
+
+def merge_sort(product_id, left_sub=0, right_sub=None):
+    if right_sub is None:
+        right_sub = len(product_id) - 1
+    if left_sub < right_sub:
+        middle = (left_sub + right_sub) // 2
+        print("Splitting: {}".format(product_id[left_sub:right_sub+1]))
+        time.sleep(2)
+        merge_sort(product_id, left_sub, middle)
+        merge_sort(product_id, middle + 1, right_sub)
+        merge(product_id, left_sub, middle, right_sub)
+
+def main():
+    product_id = [int(x) for x in input("Enter an array of numbers separated by space: ").split()]
+    print("Given array is: {}".format(product_id))
+    merge_sort(product_id)
+    print("The sorted array is: {}".format(product_id))
+
+if __name__ == "__main__":
+    main()
